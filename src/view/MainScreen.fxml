@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainScreenController">
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="14.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="main_bt_ChooseTeam" mnemonicParsing="false" onAction="#main_loadTeamChooserViewAction" text="Choose teams" />
+            <Button fx:id="main_bt_GitHub" mnemonicParsing="false" onAction="#main_visitGitHub" text="Visit us on github" />
+            <Button fx:id="main_bt_Exit" mnemonicParsing="false" onAction="#main_exit" text="Exit" />
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

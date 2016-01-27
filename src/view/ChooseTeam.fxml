@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="486.0" prefWidth="675.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ChooseTeamController">
+   <children>
+      <VBox alignment="CENTER" layoutX="26.0" layoutY="20.0" prefHeight="365.0" prefWidth="541.0" spacing="20.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label fx:id="lb_league1" text="Leage Name" />
+                        <ImageView fx:id="img_league1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="bt_league1_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" text="&lt;&lt;" />
+                              <Button fx:id="bt_league1_right" mnemonicParsing="false" text="&gt;&gt;" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label fx:id="lb_league2" text="Leage Name" />
+                        <ImageView fx:id="img_league2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="bt_league2_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" text="&lt;&lt;" />
+                              <Button fx:id="bt_league2_right" mnemonicParsing="false" text="&gt;&gt;" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children></HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="448.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label fx:id="lb_team1" text="team Name" />
+                        <ImageView fx:id="img_team1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="bt_team1_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" text="&lt;&lt;" />
+                              <Button fx:id="bt_team1_right" mnemonicParsing="false" text="&gt;&gt;" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label fx:id="lb_team2" text="team Name" />
+                        <ImageView fx:id="img_team2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="bt_team2_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" text="&lt;&lt;" />
+                              <Button fx:id="bt_team2_right" mnemonicParsing="false" text="&gt;&gt;" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children></HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Button fx:id="bt_back" mnemonicParsing="false" text="back" />
+                  <Button fx:id="bt_start" mnemonicParsing="false" text="kick off" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
