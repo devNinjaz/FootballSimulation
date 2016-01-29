@@ -14,8 +14,8 @@ public class DBController
     private final String DB_URL = "jdbc:mysql://localhost/seminarski";
 
     //  Database credentials
-    private final String USER = "root";
-    final String PASS = "kazivanje430";
+    private final String USER = ProjectParams.dbusr;
+    final String PASS = ProjectParams.dbpss;
 
     Connection connection = null;
     Statement statement = null;
