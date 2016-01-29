@@ -1,12 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SimulationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="497.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SimulationController">
    <children>
-      <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="200.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true" />
+      <VBox alignment="TOP_CENTER" layoutX="-4.0" layoutY="27.0" prefHeight="425.0" prefWidth="708.0" spacing="5.0">
+         <children>
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <ImageView fx:id="img_team1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="lb_team1" text="team 1" />
+                     </children>
+                  </VBox>
+                  <Label fx:id="lb_minute" text="01" />
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <ImageView fx:id="img_team2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="lb_team2" text="team 2" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label fx:id="lb_goals_team1" text="0" />
+                        <Label fx:id="lb_poss_team1" text="0" />
+                        <Label fx:id="lb_shots_off_target_team1" text="0" />
+                        <Label fx:id="lb_shots_on_target_team1" text="0" />
+                        <Label fx:id="lb_corners_team1" text="0" />
+                        <Label fx:id="lb_attempted_passes_team1" text="0" />
+                        <Label fx:id="lb_successful_passes_team1" text="0" />
+                        <Label fx:id="lb_tackles_team1" text="0" />
+                        <Label fx:id="lb_fouls_team1" text="0" />
+                        <Label fx:id="lb_interceptions_team1" text="0" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="80.0" prefWidth="142.0">
+                     <children>
+                        <Label text="Goals" />
+                        <Label text="Possession" />
+                        <Label text="Shots off target" />
+                        <Label text="Shots on target" />
+                        <Label text="Corners" />
+                        <Label text="Attempted passes" />
+                        <Label text="Successful passes" />
+                        <Label text="Tackles" />
+                        <Label text="Fouls" />
+                        <Label text="Interceptions" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label fx:id="lb_goals_team2" text="0" />
+                        <Label fx:id="lb_poss_team2" text="0" />
+                        <Label fx:id="lb_shots_off_target_team2" text="0" />
+                        <Label fx:id="lb_shots_on_target_team2" text="0" />
+                        <Label fx:id="lb_corners_team2" text="0" />
+                        <Label fx:id="lb_attempted_passes_team2" text="0" />
+                        <Label fx:id="lb_successful_passes_team2" text="0" />
+                        <Label fx:id="lb_tackles_team2" text="0" />
+                        <Label fx:id="lb_fouls_team2" text="0" />
+                        <Label fx:id="lb_interceptions_team2" text="0" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <TextArea prefHeight="70.0" prefWidth="596.0" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

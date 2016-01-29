@@ -17,8 +17,8 @@
                         <ImageView fx:id="img_league1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <Button fx:id="bt_league1_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" text="&lt;&lt;" />
-                              <Button fx:id="bt_league1_right" mnemonicParsing="false" text="&gt;&gt;" />
+                              <Button fx:id="bt_league1_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" onAction="#change_league_1_left" text="&lt;&lt;" />
+                              <Button fx:id="bt_league1_right" mnemonicParsing="false" onAction="#change_league_1_right" text="&gt;&gt;" />
                            </children>
                         </HBox>
                      </children>
@@ -29,8 +29,8 @@
                         <ImageView fx:id="img_league2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <Button fx:id="bt_league2_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" text="&lt;&lt;" />
-                              <Button fx:id="bt_league2_right" mnemonicParsing="false" text="&gt;&gt;" />
+                              <Button fx:id="bt_league2_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" onAction="#change_league_2_left" text="&lt;&lt;" />
+                              <Button fx:id="bt_league2_right" mnemonicParsing="false" onAction="#change_league_2_right" text="&gt;&gt;" />
                            </children>
                         </HBox>
                      </children>
@@ -44,8 +44,8 @@
                         <ImageView fx:id="img_team1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <Button fx:id="bt_team1_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" text="&lt;&lt;" />
-                              <Button fx:id="bt_team1_right" mnemonicParsing="false" text="&gt;&gt;" />
+                              <Button fx:id="bt_team1_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" onAction="#change_team_1_left" text="&lt;&lt;" />
+                              <Button fx:id="bt_team1_right" mnemonicParsing="false" onAction="#change_team_1_right" text="&gt;&gt;" />
                            </children>
                         </HBox>
                      </children>
@@ -56,8 +56,8 @@
                         <ImageView fx:id="img_team2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <Button fx:id="bt_team2_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" text="&lt;&lt;" />
-                              <Button fx:id="bt_team2_right" mnemonicParsing="false" text="&gt;&gt;" />
+                              <Button fx:id="bt_team2_left" alignment="CENTER" lineSpacing="5.0" mnemonicParsing="false" onAction="#change_team_2_left" text="&lt;&lt;" />
+                              <Button fx:id="bt_team2_right" mnemonicParsing="false" onAction="#change_team_2_right" text="&gt;&gt;" />
                            </children>
                         </HBox>
                      </children>
@@ -65,8 +65,8 @@
                </children></HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Button fx:id="bt_back" mnemonicParsing="false" text="back" />
-                  <Button fx:id="bt_start" mnemonicParsing="false" text="kick off" />
+                  <Button fx:id="bt_back" mnemonicParsing="false" onAction="#go_to_main_screen" text="back" />
+                  <Button fx:id="bt_start" mnemonicParsing="false" onAction="#go_to_simulation" text="kick off" />
                </children>
             </HBox>
          </children>
