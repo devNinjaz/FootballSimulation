@@ -15,7 +15,7 @@ public class DBController
 
     //  Database credentials
     private final String USER = "root";
-    final String PASS = "";
+    final String PASS = "kazivanje430";
 
     Connection connection = null;
     Statement statement = null;
