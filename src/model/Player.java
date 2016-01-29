@@ -1,7 +1,11 @@
 package model;
 
 import javafx.scene.image.Image;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -11,34 +15,41 @@ import java.util.HashMap;
 public class Player extends Thread
 {
     private String playerName, playerSurname;
-    private Date dateOfBirth; // todo TEST and TRY date conversion from SQL
-    private HashMap<String, Short> stats;
-    private Position position;
-    private Image playerImage;
+    private Date dateOfBirth;
+    private HashMap<String, Integer> stats;
+    private String position;
+    private Image playerImage;  //TODO add player image
+    private Integer playerAge;
 
-    public Player(String name, String surname, String pos, java.sql.Date date, HashMap<String, Short> stats)
+    public Player(ResultSet s)
     {
-        this.playerName = name;
-        this.playerSurname = surname;
-        this.position = new Position(pos);
-        this.dateOfBirth = new Date(date.getTime()); // TODO check
-        this.stats = new HashMap<>(stats);
-    }
-
-    public Player(String name, String surname, String pos, java.sql.Date date, HashMap<String, Short> stats, Image img)
-    {
-        this.playerName = name;
-        this.playerSurname = surname;
-        this.position = new Position(pos);
-        this.dateOfBirth = new Date(date.getTime()); // TODO check
-        this.stats = new HashMap<>(stats);
-        this.playerImage = img;
+        try {
+            this.playerName = s.getString("name");
+            this.playerSurname = s.getString("surname");
+            this.position = s.getString("position");
+            this.dateOfBirth = s.getDate("date_of_birth");
+            DateTime now = new DateTime();
+            DateTime birhaday = new DateTime(this.dateOfBirth);
+            Period period = new Period(birhaday,now);
+            this.playerAge = period.getYears();
+            stats = new HashMap<>();
+            for(int i = 8 ; i <= 23; i++)
+                stats.put( s.getMetaData().getColumnName(i) ,  s.getInt(i));
+        }
+        catch (SQLException e) {
+            System.out.println("Pravljenje objekta player EXP!");
+        }
     }
 
     @Override
     public void run()
     {
         super.run();
+    }
+
+    public Integer getPlayerStats(String s)
+    {
+        return stats.get(s);
     }
 
     public String getPlayerName()
@@ -71,25 +82,6 @@ public class Player extends Thread
         this.dateOfBirth = dateOfBirth;
     }
 
-    public HashMap<String, Short> getStats()
-    {
-        return stats;
-    }
-
-    public void setStats(HashMap<String, Short> stats)
-    {
-        this.stats = stats;
-    }
-
-    public Position getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(Position position)
-    {
-        this.position = position;
-    }
 
     public Image getPlayerImage()
     {
@@ -98,8 +90,7 @@ public class Player extends Thread
 
     public int getPlayerAge()
     {
-        // TODO implement this homie
-        return 25;
+        return this.playerAge;
     }
 
     @Override
