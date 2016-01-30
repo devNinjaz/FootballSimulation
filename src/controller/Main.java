@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.GeneralFootballStatsContainer;
 import model.Team;
 
 import java.sql.*;
@@ -24,6 +25,7 @@ public class Main extends Application {
         primaryStage.setTitle("Project Aurora");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+        GeneralFootballStatsContainer generalFootballStatsContainer= new GeneralFootballStatsContainer();
     }
 
     public static void main(String[] args) throws SQLException
