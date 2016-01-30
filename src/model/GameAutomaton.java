@@ -26,13 +26,13 @@ public class GameAutomaton extends Thread
     private int goalsTeam1, goalsTeam2, possTeam1, possTeam2, shotsOffTeam1, shotsOffTeam2, shotsOnTeam1,
         shotsOnTeam2, foulsTeam1, foulsTeam2, tacklesTeam1, tacklesTeam2, succPassesTeam1, succPassesTeam2,
         attPassesTeam1, attPassesTeam2, interceptTeam1, interceptTeam2, gameMinutes = 0;
-    private int attemptedDribbles1, attemptedDribbles2, successfulDribbles1, successfulDribbles2;
+    private int attemptedDribbles1, attemptedDribbles2, successfulDribbles1, successfulDribbles2, corners1, corners2;
 
     // States automaton uses
     enum state {
         initialState, halfTimeState, finalState,
-        dribbleA, possessionA, passA, shootA, goalA, goalKickA,
-        dribbleB, possessionB, passB, shootB, goalB, goalKickB
+        dribbleA, possessionA, cornerA, passA, shootA, goalA, goalKickA,
+        dribbleB, possessionB, cornerB, passB, shootB, goalB, goalKickB
     }
     Player magicPlayer;                                 // Player who was in action
     private state automatonState;                       //  set in constructor
@@ -106,13 +106,18 @@ public class GameAutomaton extends Thread
         float res;
         switch (automatonState) {
            case initialState:
+               // At the start of game, teamA has the ball
                automatonState = state.possessionA;
                showCommentary(automatonState, null, null, 0f);
                break;
            case halfTimeState:
+               // At half time, teamB has the ball
                automatonState = state.possessionB;
                break;
            case possessionA:
+               // TODO implement logic that decides WHAT will team do
+               // shoot, pass, cross, dribble...
+               handlePossessionState(automatonState);
                break;
            case goalA:
                goalsTeam1++;
@@ -140,16 +145,79 @@ public class GameAutomaton extends Thread
                    showCommentary(automatonState, dribbler, opposition, res);
                } else {
                     attemptedDribbles1++;
+                   showCommentary(automatonState, dribbler, opposition, res);
                }
                break;
-           case shootA:
-               break;
+            case shootA:
+                // we split chances for shot takers the following way:
+                Player shooter = team1.getShooter();
+                Player goalkeeper = team2.getGoalkeeper();
+                res = duelsEvaluator.tryShooting(
+                        shooter.getStats().get("attacking_prowess"),
+                        shooter.getStats().get("kicking_power"),
+                        shooter.getStats().get("finishing"),
+                        goalkeeper.getStats().get("overall")
+                );
+                if (res == DuelsEvaluator.successfulEvent) {
+                    // We have a goal!
+                    System.out.println("GOAL for " + team1.getTeamName() + " scored by: " + shooter.getFullPlayerName());
+                    automatonState = state.goalA;
+                    goalsTeam1++;
+                    shotsOnTeam1++;
+                } else {
+                    // Player failed to score
+                    // 60 - 40 split on winning ball back
+                    shotsOffTeam1++;
+                    res = rand.runif();
+                    if (res <= 0.4) {
+                        automatonState = state.possessionA;
+                    } else {
+                       automatonState = state.possessionB;
+                    }
+                }
+                break;
+            case cornerA:
+                Player setPieceTaker = team1.getSetPieceTaker();
+                res = duelsEvaluator.tryCorner(setPieceTaker.getStats().get("place_kicking"));
+                corners1++;
+                if (res == DuelsEvaluator.successfulEvent) {
+                    // Team scored from corner
+                    goalsTeam1++;
+                    automatonState = state.goalA;           // STATE SWITCH
+                } else {
+                    // if no goal, 50/50 for ball winning by both sides
+                    res = rand.runif();
+                    if (res <= 0.5f) {
+                        automatonState = state.possessionA;
+                    } else {
+                        automatonState = state.possessionB;
+                    }
+                }
+                break;
            default:
                System.out.println("Not initial state");
        }
-//        showCommentary();
     }
 
+    private void handlePossessionState(state automatonState)
+    {
+        float probabilityToPass = 0.7f;
+        float probabilityToDribble = 0.20f;
+        float probabilityToShot = 0.1f;             // not used, I've put it just for info
+        float bacon = rand.runif();
+        if (bacon <= probabilityToPass) {
+            // We make a pass
+            automatonState = (automatonState == state.possessionA ) ? state.passA : state.passB;
+        } else if (bacon <= probabilityToPass + probabilityToDribble) {
+            // We make a dribble
+            automatonState = (automatonState == state.possessionA ) ? state.dribbleA : state.dribbleB;
+        } else {
+            // We make a shot
+            automatonState = (automatonState == state.possessionA) ? state.shootA : state.shootB;
+        }
+    }
+
+    // TODO decide on the fate of this function
     private void showCommentary(state automatonState, Player homie1, Player homie2, float res)
     {
         String msg = "";
@@ -167,11 +235,11 @@ public class GameAutomaton extends Thread
                 break;
             case goalA:
                 msg = "GOAL for " + team1.getTeamName();
-                msg = "Scored by: " + homie1.getPlayerName() + " " + homie1.getPlayerSurname();
+                msg = "\nScored by: " + homie1.getFullPlayerName();
                 break;
             case dribbleA:
                 msg = "DRIBBLE from " + homie1.getPlayerName() + " " + homie1.getPlayerSurname()
-                        + " against " + homie2.getFullPlayerName();
+                        + " against " + homie2.getFullPlayerName() + ": ";
                 if (res == DuelsEvaluator.successfulEvent)
                     msg += "SUCCESS";
                 else
@@ -179,7 +247,7 @@ public class GameAutomaton extends Thread
                 break;
         }
 
-        // Bind to some textBox on gui
+        // TODO Bind to some textBox on gui
         System.out.println(msg);
     }
 
