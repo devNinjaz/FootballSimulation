@@ -5,6 +5,9 @@ import controller.DBController;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Created by devninja on 30.1.16..
+ */
 public class GeneralFootballStatsContainer
 {
     public static float averageShotsOnTarget;
@@ -66,6 +69,5 @@ public class GeneralFootballStatsContainer
             fouledPerGame = resultSet.getFloat("fouled");
         }
         dbController.cleanUp();
-
     }
 }
