@@ -52,6 +52,11 @@ public class Player extends Thread
         return stats.get(s);
     }
 
+    public HashMap<String, Integer> getStats()
+    {
+        return stats;
+    }
+
     public String getPlayerName()
     {
         return playerName;
@@ -65,6 +70,11 @@ public class Player extends Thread
     public String getPlayerSurname()
     {
         return playerSurname;
+    }
+
+    public String getFullPlayerName()
+    {
+        return playerName + " " + playerSurname;
     }
 
     public void setPlayerSurname(String playerSurname)
@@ -82,6 +92,10 @@ public class Player extends Thread
         this.dateOfBirth = dateOfBirth;
     }
 
+    public String getPosition()
+    {
+        return position;
+    }
 
     public Image getPlayerImage()
     {
@@ -96,8 +110,7 @@ public class Player extends Thread
     @Override
     public String toString()
     {
-        String msg = playerName + " " + playerSurname + " " + dateOfBirth.toString() + "\n";
-
+        String msg = playerName + " " + playerSurname + " " + getPosition() + " " + getPlayerAge() + "\n";
         return msg;
     }
 }
