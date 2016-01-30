@@ -1,5 +1,7 @@
 package controller;
 
+import model.Player;
+
 import java.util.Random;
 
 /**
@@ -62,80 +64,89 @@ public class DuelsEvaluator
     //  probably later, some function will be changed to return more then 2 possible events.
     //  The better the functions are, simulation is more precise.
     // **********************************************************************************************************
-    public float tryPassing(int shortPassing, int defensiveProwess)
+    public float tryPassing(Player passer, Player opposition)
     {
-        // TODO implement logic that creates 100% successful passes
-        // TODO because nobody is near the player making the pass
+        int shortPassing = passer.getStats().get("low_pass");
+        int longPassing = passer.getStats().get("lofted_pass");
+        int defensiveProwess = opposition.getStats().get("defensive_prowess");
+        int ballWinning = opposition.getStats().get("ball_winning");
         // TODO to be done AFTER creating automaton construction
         float dragon = rand.nextFloat();
+        float probNoPressure = 0.5f;
         float eventResult;
-        if (dragon <= toProb(shortPassing)) {
-            // Pass check success
+        // We assume that around 50% of the time, players are under no pressure to make a pass
+        if (dragon <= probNoPressure) {
+            // Around 70% of the time, players make a short pass
             dragon = rand.nextFloat();
-            if (dragon <= toProb(defensiveProwess) * passingAfterSuccInterceptPenalty) {
-                // successful interception
-                eventResult = failedEvent;
+            if (dragon <= 0.7f) {
+                // short pass
+                dragon = rand.nextFloat();
+                if (dragon <= toProb(shortPassing)) {
+                    // pass success
+                    eventResult = successfulEvent;
+                } else {
+                    // pass failed
+                    // very rare in football, we give player another chance
+                    dragon = rand.nextFloat();
+                    eventResult = (dragon <= toProb(shortPassing) ) ? successfulEvent : failedEvent;
+                }
             } else {
-                eventResult = successfulEvent;
+                // long pass
+                eventResult = (dragon <= toProb(longPassing)) ? successfulEvent : failedEvent;
             }
 
         } else {
-            // Pass check fail
-            dragon = rand.nextFloat();
-            if (dragon <= toProb(defensiveProwess) * passingAfterFailInterceptPenalty) {
-                eventResult = failedEvent;
+            // player is under pressure
+            if (dragon <= (toProb(shortPassing) + toProb(longPassing))/2.0f * passingInitialSuccessPenalty) {
+                // Pass check success
+                dragon = rand.nextFloat();
+                if (dragon <= (toProb(defensiveProwess) + toProb(ballWinning))/2.0f * passingAfterSuccInterceptPenalty) {
+                    // successful interception
+                    eventResult = failedEvent;
+                } else {
+                    eventResult = successfulEvent;
+                }
+
             } else {
-                eventResult = successfulEvent;
+                // Pass check fail
+                dragon = rand.nextFloat();
+                if (dragon <= (toProb(defensiveProwess) + toProb(ballWinning))/2.0f * passingAfterFailInterceptPenalty) {
+                    eventResult = failedEvent;
+                } else {
+                    eventResult = successfulEvent;
+                }
             }
         }
-       logEvent("DRIBBLING:", eventResult);
+       logEvent("PASSING:", eventResult);
         return eventResult;
     }
 
-    // TODO can't implement this until GK stats are fixed
-    // UPDATE I've decided to eval GK overall against required params until GK stats are fixed
-    public float tryShooting(int attackingProwess, int shootingPower, int fininshing, int gkOverall)
+
+    public float tryDribbling(Player dribbler, Player opposition)
     {
-        // find the average probability of player's shooting quality
-        float avg = (toProb(attackingProwess) + toProb(shootingPower) + toProb(fininshing)) / 3.0f;
-        float dragon = rand.nextFloat();
-        float eventResult;
+        // Extracting required stats
+        int dribbling = dribbler.getStats().get("dribbling");
+        int speed = dribbler.getStats().get("speed");
+        int explosivePower = dribbler.getStats().get("explosive_power");
+        int ballWinning = opposition.getStats().get("ball_winning");
+        int bodyBalance = opposition.getStats().get("body_balance");
+        int defensiveProwess = opposition.getStats().get("defensive_prowess");
 
-        if (dragon <= avg * ShootingInitialPenalty) {
-            dragon = rand.nextFloat();
-            if (dragon <= toProb(gkOverall) * ShootingSuccessfulShotPenalty) {
-                eventResult = failedEvent;
-            } else {
-                eventResult = successfulEvent;
-            }
-        } else {
-            dragon = rand.nextFloat();
-            if (dragon <= toProb(gkOverall) * ShootingFailedShotPenalty) {
-                eventResult = failedEvent;
-            } else {
-                eventResult = successfulEvent;
-            }
-        }
-
-        return (rand.nextFloat() <= 0.7) ? failedEvent : successfulEvent;
-    }
-
-    public float tryDribbling(int dribblingA, int speedA, int explosivePowerA,
-                              int bodyBalanceB, int defensiveProwessB, int ballWinningB)
-    {
         // TODO randomly match 3 vs 3 using a vector or something
+
+        // Evaluating event
         float dragon = rand.nextFloat();
         float eventResult;
-        if (dragon <= (toProb(dribblingA)+toProb(speedA)+toProb(explosivePowerA))/3.0f*dribblingInitialSucessPenalty)
+        if (dragon <= (toProb(dribbling)+toProb(speed)+toProb(explosivePower))/3.0f*dribblingInitialSucessPenalty)
         {
             dragon = rand.nextFloat();
-            if (dragon <= (toProb(bodyBalanceB)+toProb(defensiveProwessB)+toProb(ballWinningB))/3.0f*dribblingAfterSuccTacklePenalty) {
+            if (dragon <= (toProb(bodyBalance)+toProb(defensiveProwess)+toProb(ballWinning))/3.0f* dribblingAfterSuccTacklePenalty) {
                eventResult = failedEvent;
             } else eventResult = successfulEvent;
 
         } else {
             dragon = rand.nextFloat();
-            if (dragon <= (toProb(bodyBalanceB)+toProb(defensiveProwessB)+toProb(ballWinningB))/3.0f*dribblingAfterFailTacklePenalty) {
+            if (dragon <= (toProb(bodyBalance)+toProb(defensiveProwess)+toProb(ballWinning))/3.0f* dribblingAfterFailTacklePenalty) {
                 eventResult = failedEvent;
             } else eventResult = successfulEvent;
         }
@@ -144,8 +155,9 @@ public class DuelsEvaluator
         return eventResult;
     }
 
-    public float tryCorner(int placeKicking)
+    public float tryCorner(Player taker)
     {
+        int placeKicking = taker.getStats().get("place_kicking");
         float dragon = rand.nextFloat();
         float eventResult;
         if (dragon <= toProb(placeKicking) * cornerPenalty) {
@@ -183,5 +195,36 @@ public class DuelsEvaluator
     public String toString()
     {
         return "Hello world, I am used to simulate events in a football game.";
+    }
+
+    public float tryShooting(Player shooter, Player goalkeeper)
+    {
+        // find the average probability of player's shooting quality
+        int attackingProwess = shooter.getStats().get("attacking_prowess");
+        int finishing = shooter.getStats().get("finishing");
+        int kickingPower = shooter.getStats().get("kicking_power");
+        int gkOverall = goalkeeper.getStats().get("overall");
+
+        float avg = (toProb(attackingProwess) + toProb(kickingPower) + toProb(finishing)) / 3.0f;
+        float dragon = rand.nextFloat();
+        float eventResult;
+
+        if (dragon <= avg * ShootingInitialPenalty) {
+            dragon = rand.nextFloat();
+            if (dragon <= toProb(gkOverall) * ShootingSuccessfulShotPenalty) {
+                eventResult = failedEvent;
+            } else {
+                eventResult = successfulEvent;
+            }
+        } else {
+            dragon = rand.nextFloat();
+            if (dragon <= toProb(gkOverall) * ShootingFailedShotPenalty) {
+                eventResult = failedEvent;
+            } else {
+                eventResult = successfulEvent;
+            }
+        }
+        return eventResult;
+//        return (rand.nextFloat() <= 0.7) ? failedEvent : successfulEvent;
     }
 }
