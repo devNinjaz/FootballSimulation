@@ -46,7 +46,6 @@ public class SimulationController extends Thread implements Initializable
 
         // Starting simulation
         gameAutomaton.start();
-
     }
 
     private void bindGuiElements(GameAutomaton gameAutomaton)
