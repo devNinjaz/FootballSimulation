@@ -11,11 +11,14 @@ public class DBController
 {
     // JDBC driver name and database URL
     private final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+//    private final String DB_URL = "jdbc:mysql://db4free.net:3306/ppaurora";
     private final String DB_URL = "jdbc:mysql://localhost/seminarski";
 
     //  Database credentials
-    private final String USER = ProjectParams.dbusr;
-    final String PASS = ProjectParams.dbpss;
+//    private final String USER = ProjectParams.onlinedbusr;
+//    final String PASS = ProjectParams.onlinedbpss;
+    private final String USER = ProjectParams.localdbusr;
+    final String PASS = ProjectParams.localdbpss;
 
     Connection connection = null;
     Statement statement = null;
