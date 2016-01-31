@@ -2,14 +2,22 @@ package controller;
 
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import model.GameAutomaton;
 import model.Team;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -34,6 +42,7 @@ public class SimulationController extends Thread implements Initializable
         lb_fouls_team1, lb_fouls_team2, lb_interceptions_team1, lb_interceptions_team2,
         lb_corners_team1, lb_corners_team2;
     @FXML TextArea ta_commentary, ta_scorers;
+    @FXML Button bt_home;
     // **************************************************************************************************
 
     @Override
@@ -55,6 +64,24 @@ public class SimulationController extends Thread implements Initializable
 
         // Starting simulation
         gameAutomaton.start();
+    }
+
+    @FXML
+    private void bt_homeAction(ActionEvent event) throws IOException
+    {
+        Stage stage;
+        Parent root;
+
+        // We also need to kill automaton thread
+        // and deference it so it doesn't take unneeded memory
+        gameAutomaton.interrupt();
+        gameAutomaton = null;
+        stage = (Stage) bt_home.getScene().getWindow();
+//        root = FXMLLoader.load(getClass().getResource("../view/MainScreen.fxml"));
+        root = FXMLLoader.load(new URL(Main.PathToViews + "/MainScreen.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void bindGuiElements(GameAutomaton gameAutomaton)
