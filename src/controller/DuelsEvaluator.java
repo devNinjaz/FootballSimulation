@@ -1,7 +1,10 @@
 package controller;
 
+import javafx.application.Platform;
+import javafx.scene.control.TextArea;
 import model.Player;
 
+import javax.xml.soap.Text;
 import java.util.Random;
 
 /**
@@ -38,9 +41,24 @@ public class DuelsEvaluator
     float ShootingSuccessfulShotPenalty = 0.5f;
     float ShootingFailedShotPenalty = 0.9f;
 
+    // Use for updating onScreen commentary
+    public static String CommentaryMsg;
+
+    private Player lastScorer;
+
     public DuelsEvaluator()
     {
         rand = new Random();
+    }
+
+    public Player getLastKnownScorer()
+    {
+        return lastScorer;
+    }
+
+    public void setLastScorer(Player lastScorer)
+    {
+        this.lastScorer = lastScorer;
     }
 
     private float toProb(int val)
@@ -70,10 +88,12 @@ public class DuelsEvaluator
         int longPassing = passer.getStats().get("lofted_pass");
         int defensiveProwess = opposition.getStats().get("defensive_prowess");
         int ballWinning = opposition.getStats().get("ball_winning");
-        // TODO to be done AFTER creating automaton construction
+
         float dragon = rand.nextFloat();
         float probNoPressure = 0.5f;
         float eventResult;
+        boolean shortPass = true;
+
         // We assume that around 50% of the time, players are under no pressure to make a pass
         if (dragon <= probNoPressure) {
             // Around 70% of the time, players make a short pass
@@ -93,7 +113,21 @@ public class DuelsEvaluator
             } else {
                 // long pass
                 eventResult = (dragon <= toProb(longPassing)) ? successfulEvent : failedEvent;
+                shortPass = false;
             }
+
+            // *****************************************************
+            if (eventResult == successfulEvent) {
+                CommentaryMsg = passer.getFullPlayerName() + " sends a ";
+                if (shortPass) CommentaryMsg += "short";
+                else CommentaryMsg += "long";
+                CommentaryMsg += " pass to a teammate.";
+            } else {
+                CommentaryMsg = passer.getFullPlayerName() + " with an unforced error.";
+                CommentaryMsg += opposition.getFullPlayerName() + " takes the ball for his team.";
+            }
+            // *****************************************************
+
 
         } else {
             // player is under pressure
@@ -103,8 +137,11 @@ public class DuelsEvaluator
                 if (dragon <= (toProb(defensiveProwess) + toProb(ballWinning))/2.0f * passingAfterSuccInterceptPenalty) {
                     // successful interception
                     eventResult = failedEvent;
+                    CommentaryMsg = opposition.getFullPlayerName() + " with a great interception of the pass";
+                    CommentaryMsg += " sent by " + passer.getFullPlayerName();
                 } else {
                     eventResult = successfulEvent;
+                    CommentaryMsg = passer.getFullPlayerName() + " with a pass for a teammate.";
                 }
 
             } else {
@@ -118,6 +155,7 @@ public class DuelsEvaluator
             }
         }
        logEvent("PASSING:", eventResult);
+
         return eventResult;
     }
 
@@ -150,8 +188,13 @@ public class DuelsEvaluator
                 eventResult = failedEvent;
             } else eventResult = successfulEvent;
         }
-
         logEvent("SHOOTING : ", eventResult);
+
+        // ***********************************************************************************************************************
+        if (eventResult == successfulEvent) CommentaryMsg = dribbler.getFullPlayerName() + " dribbles past " + opposition.getFullPlayerName();
+        else CommentaryMsg = dribbler.getFullPlayerName() + " tries to dribble, but, " + opposition.getFullPlayerName() + " takes the ball away.";
+        // ***********************************************************************************************************************
+
         return eventResult;
     }
 
@@ -164,6 +207,11 @@ public class DuelsEvaluator
             eventResult = successfulEvent;
         } else eventResult = failedEvent;
         logEvent("CORNER: ", eventResult);
+        if (eventResult == successfulEvent) {
+           CommentaryMsg = taker.getFullPlayerName() + " with a great corner, and their team scores!";
+        } else {
+           CommentaryMsg = taker.getFullPlayerName() + " takes the corner, but opposition defends well.";
+        }
         return eventResult;
     }
 
@@ -215,6 +263,7 @@ public class DuelsEvaluator
                 eventResult = failedEvent;
             } else {
                 eventResult = successfulEvent;
+                setLastScorer(shooter);
             }
         } else {
             dragon = rand.nextFloat();
@@ -222,9 +271,16 @@ public class DuelsEvaluator
                 eventResult = failedEvent;
             } else {
                 eventResult = successfulEvent;
+                setLastScorer(shooter);
             }
         }
+
+        if (eventResult == successfulEvent) {
+            CommentaryMsg = shooter.getFullPlayerName() + " with a shot...and he scores!";
+        } else {
+            CommentaryMsg = shooter.getFullPlayerName() + " takes a shot, but GK saves!";
+        }
+
         return eventResult;
-//        return (rand.nextFloat() <= 0.7) ? failedEvent : successfulEvent;
     }
 }
