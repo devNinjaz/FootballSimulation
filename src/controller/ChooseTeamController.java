@@ -68,7 +68,8 @@ public class ChooseTeamController implements Initializable
     Button bt_back;
     @FXML
     Button bt_start;
-
+    @FXML
+    Button bt_lineups_teamA, bt_lineups_teamB;
     @FXML
     ImageView img_league1;
     @FXML
@@ -251,6 +252,49 @@ public class ChooseTeamController implements Initializable
     }
 
     @FXML
+    public void go_to_lineups_teamA(ActionEvent event) throws IOException
+    {
+        Main.lineupsChosenTeam = 1;
+
+        // todo experiment
+        Main.InitialChosenLeague1 = position_of_league_1;
+        Main.InitialChosenLeague2 = position_of_league_2;
+        Main.InitialChosenTeam1 = position_of_team_1;
+        Main.InitialChosenTeam2 = position_of_team_2;
+
+        setChosenTeams();
+        // switches to ChooseTeam.fxml
+        Stage stage;
+        Parent root;
+
+        stage = (Stage) bt_lineups_teamA.getScene().getWindow();
+        root = FXMLLoader.load(new URL(Main.PathToViews + "/Lineups.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void go_to_lineups_teamB(ActionEvent event) throws IOException
+    {
+        Main.lineupsChosenTeam = 2;
+        Main.InitialChosenLeague1 = position_of_league_1;
+        Main.InitialChosenLeague2 = position_of_league_2;
+        Main.InitialChosenTeam1 = position_of_team_1;
+        Main.InitialChosenTeam2 = position_of_team_2;
+        setChosenTeams();
+
+        Stage stage;
+        Parent root;
+
+        stage = (Stage) bt_lineups_teamB.getScene().getWindow();
+        root = FXMLLoader.load(new URL(Main.PathToViews + "/Lineups.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
     public void go_to_main_screen(ActionEvent event) throws IOException
     {
         // switches to ChooseTeam.fxml
@@ -258,7 +302,8 @@ public class ChooseTeamController implements Initializable
         Parent root;
 
         stage = (Stage) bt_back.getScene().getWindow();
-        root = FXMLLoader.load(getClass().getResource("../view/MainScreen.fxml"));
+//        root = FXMLLoader.load(getClass().getResource("../view/MainScreen.fxml"));
+        root = FXMLLoader.load(new URL(Main.PathToViews + "/MainScreen.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -266,11 +311,6 @@ public class ChooseTeamController implements Initializable
 
     private void setChosenTeams()
     {
-        // todo
-        @Deprecated
-//        Main.teamA = leagues.get(position_of_league_1).getTeams().get(position_of_team_1);
-//        Main.teamB = leagues.get(position_of_league_2).getTeams().get(position_of_team_2);
-
         DBController query = new DBController();
         String query1 = "select * from players  p join players_stats ps on p.player_id = ps.player_id ";
         query1 += "join teams t on t.team_id = p.team_id ";
@@ -333,7 +373,7 @@ public class ChooseTeamController implements Initializable
             }
 
         } catch (SQLException e) {
-            System.out.println("Glogalni objekat team FAIL");
+            System.out.println("Globalni objekat team FAIL");
         }
 
        query.cleanUp();
@@ -351,7 +391,8 @@ public class ChooseTeamController implements Initializable
         //get reference to the button's stage
         stage = (Stage) bt_back.getScene().getWindow();
 
-        root = FXMLLoader.load(getClass().getResource("../view/Simulation.fxml"));
+//        root = FXMLLoader.load(getClass().getResource("../view/Simulation.fxml"));
+        root = FXMLLoader.load(new URL(Main.PathToViews + "/Simulation.fxml"));
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -362,13 +403,14 @@ public class ChooseTeamController implements Initializable
     public void initialize(URL location, ResourceBundle resources)
     {
         loadLeaguesAndTeams();
-        img_league1.setImage(leagues.get(0).getLeague_logo());
-        img_league2.setImage(leagues.get(1).getLeague_logo());
-        img_team1.setImage(leagues.get(0).getTeams().get(0).getTeam_logo());
-        img_team2.setImage(leagues.get(1).getTeams().get(0).getTeam_logo());
-        lb_league1.setText(leagues.get(0).getLeague_name());
-        lb_league2.setText(leagues.get(1).getLeague_name());
-        lb_team1.setText(leagues.get(0).getTeams().get(0).getTeamName());
-        lb_team2.setText(leagues.get(1).getTeams().get(0).getTeamName());
+        img_league1.setImage(leagues.get(Main.InitialChosenLeague1).getLeague_logo());
+        img_league2.setImage(leagues.get(Main.InitialChosenLeague2).getLeague_logo());
+        img_team1.setImage(leagues.get(Main.InitialChosenLeague1).getTeams().get(Main.InitialChosenTeam1).getTeam_logo());
+        img_team2.setImage(leagues.get(Main.InitialChosenLeague2).getTeams().get(Main.InitialChosenTeam2).getTeam_logo());
+        lb_league1.setText(leagues.get(Main.InitialChosenLeague1).getLeague_name());
+        lb_league2.setText(leagues.get(Main.InitialChosenLeague2).getLeague_name());
+        lb_team1.setText(leagues.get(Main.InitialChosenLeague1).getTeams().get(Main.InitialChosenTeam1).getTeamName());
+        lb_team2.setText(leagues.get(Main.InitialChosenLeague2).getTeams().get(Main.InitialChosenTeam2).getTeamName());
+        setChosenTeams();
     }
 }
