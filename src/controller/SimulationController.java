@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import model.GameAutomaton;
 import model.Team;
@@ -18,18 +20,21 @@ public class SimulationController extends Thread implements Initializable
 {
     Team teamA, teamB;
     GameAutomaton gameAutomaton;
+
+    // Binders for GUI
+    SimpleStringProperty team1Name, team2Name;
+
+    // **************************************************************************************************
     @FXML Label lb_team1, lb_team2, lb_minute;
     @FXML ImageView img_team1, img_team2;
-
-    // Stats
     @FXML Label lb_goals_team1, lb_goals_team2, lb_poss_team1, lb_poss_team2,
         lb_shots_off_target_team1, lb_shots_off_target_team2, lb_shots_on_target_team1,
         lb_shots_on_target_team2, lb_attempted_passes_team1, lb_attempted_passes_team2,
         lb_successful_passes_team1, lb_successful_passes_team2, lb_tackles_team1, lb_tackles_team2,
-        lb_fouls_team1, lb_fouls_team2, lb_interceptions_team1, lb_interceptions_team2;
-
-    // Binders for GUI
-    SimpleStringProperty team1Name, team2Name;
+        lb_fouls_team1, lb_fouls_team2, lb_interceptions_team1, lb_interceptions_team2,
+        lb_corners_team1, lb_corners_team2;
+    @FXML TextArea ta_commentary, ta_scorers;
+    // **************************************************************************************************
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -43,6 +48,10 @@ public class SimulationController extends Thread implements Initializable
 
         // Binding values to GUI elements
         bindGuiElements(gameAutomaton);
+
+        ta_commentary.setText("Welcome to Project Aurora.\n");
+        ta_commentary.appendText("Playing today: " + teamA.getTeamName() + " versus " + teamB.getTeamName() + "\n");
+        ta_commentary.appendText("Starting from the center of the pitch: " + teamA.getTeamName() + "\n");
 
         // Starting simulation
         gameAutomaton.start();
@@ -63,7 +72,10 @@ public class SimulationController extends Thread implements Initializable
                 lb_shots_off_target_team1, lb_shots_off_target_team2, lb_shots_on_target_team1,
                 lb_shots_on_target_team2, lb_attempted_passes_team1, lb_attempted_passes_team2,
                 lb_successful_passes_team1, lb_successful_passes_team2, lb_tackles_team1, lb_tackles_team2,
-                lb_fouls_team1, lb_fouls_team2, lb_interceptions_team1, lb_interceptions_team2, lb_minute
+                lb_fouls_team1, lb_fouls_team2, lb_interceptions_team1, lb_interceptions_team2, lb_minute,
+                lb_corners_team1, lb_corners_team2
         );
+        gameAutomaton.bindCommentaryBox(ta_commentary);
+        gameAutomaton.bindListViewsScorers(ta_scorers);
     }
 }
