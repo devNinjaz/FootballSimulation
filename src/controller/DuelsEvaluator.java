@@ -37,8 +37,8 @@ public class DuelsEvaluator
     float throwInPenalty = 0.75f;
 
     // Shooting event
-    float ShootingInitialPenalty = 0.5f;
-    float ShootingSuccessfulShotPenalty = 0.5f;
+    float ShootingInitialPenalty = 0.4f;
+    float ShootingSuccessfulShotPenalty = 0.4f;
     float ShootingFailedShotPenalty = 0.9f;
 
     // Use for updating onScreen commentary
@@ -123,7 +123,7 @@ public class DuelsEvaluator
                 else CommentaryMsg += "long";
                 CommentaryMsg += " pass to a teammate.";
             } else {
-                CommentaryMsg = passer.getFullPlayerName() + " with an unforced error.";
+                CommentaryMsg = passer.getFullPlayerName() + " with an unforced error. ";
                 CommentaryMsg += opposition.getFullPlayerName() + " takes the ball for his team.";
             }
             // *****************************************************
