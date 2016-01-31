@@ -45,6 +45,24 @@ public class Team
         this.league_name = league_name;
     }
 
+    public void sortPlayersByPosition()
+    {
+        HashMap<String, Integer> valuators = new HashMap<>();
+        valuators.put("gk", 0);
+        valuators.put("lb", 1);
+        valuators.put("cb", 2);
+        valuators.put("rb", 3);
+        valuators.put("dm", 4);
+        valuators.put("cm", 5);
+        valuators.put("am", 6);
+        valuators.put("lw", 7);
+        valuators.put("rw", 8);
+        valuators.put("st", 9);
+        Collections.sort(players, (o1, o2) ->
+            valuators.get(o1.getPosition()) - valuators.get(o2.getPosition())
+        );
+    }
+
     public String getLeague_name()
     {
         return league_name;
