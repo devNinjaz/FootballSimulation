@@ -34,7 +34,7 @@ public class GameAutomaton extends Thread
         attPassesTeam1, attPassesTeam2, interceptTeam1, interceptTeam2, gameMinutes = 0;
     private int attemptedDribbles1, attemptedDribbles2, successfulDribbles1, successfulDribbles2, corners1, corners2;
 
-    private float probabilityCorner, probabilityInterception;
+    private float probabilityCorner, probabilityInterception, probabilityFoul;
     private int automatonIterations, teamAIterations, teamBIterations;
 
     public void bindCommentaryBox(TextArea ta_commentary)
@@ -68,6 +68,10 @@ public class GameAutomaton extends Thread
 
         probabilityCorner = rand.getFromInterval(15, 26) * 1.0f / 100.0f;
         probabilityInterception = rand.getFromInterval(15, 30) * 1.0f / 100.0f;
+        probabilityFoul = rand.getFromInterval(15, 30) * 1.0f / 100.0f;
+
+        // Used for calculating team possession
+        // TODO check if it's counted correctly
         automatonIterations = 1;
         teamAIterations = 1;
         teamBIterations = 1;
@@ -172,14 +176,12 @@ public class GameAutomaton extends Thread
 
         for (int i = 0; i < n; i++) {
             automatonIterations++;
-            System.out.println("i = " + i);
             switch (automatonState) {
 
                 // INITIAL
                 case initialState:
                     // At the start of game, teamA has the ball
                     automatonState = state.possessionA;
-                    System.out.println("initial state");
                     break;
 
                 // HALF TIME
@@ -191,11 +193,9 @@ public class GameAutomaton extends Thread
                 // POSSESSION (most important, controls most of the automaton)
                 case possessionA:
                     automatonState = handlePossessionState(automatonState);           // swithces global variable automatonState
-                    System.out.println("possessionA");
                     break;
                 case possessionB:
                     automatonState = handlePossessionState(automatonState);
-                    System.out.println("Possession B");
                     break;
 
                 // GOALS
@@ -267,7 +267,7 @@ public class GameAutomaton extends Thread
                     automatonState = state.possessionB;
                 }
             }
-            System.out.println("CORNER A");
+//            System.out.println("CORNER A");
 
         } else {
             teamBIterations++;
@@ -288,7 +288,7 @@ public class GameAutomaton extends Thread
                     automatonState = state.possessionA;
                 }
             }
-            System.out.println("CORNER B");
+//            System.out.println("CORNER B");
         }
     }
 
@@ -400,7 +400,7 @@ public class GameAutomaton extends Thread
 
 //                automatonState = state.possessionB;
             }
-            System.out.println("PASSING A");
+//            System.out.println("PASSING A");
         } else {
             teamBIterations++;
             Player passer = team2.getPasser();
@@ -422,7 +422,7 @@ public class GameAutomaton extends Thread
                 attPassesTeam2++;
 //                automatonState = state.possessionA;
             }
-            System.out.println("PASSING B");
+//            System.out.println("PASSING B");
         }
     }
 
@@ -442,17 +442,22 @@ public class GameAutomaton extends Thread
                 successfulDribbles1++;
                 automatonState = state.possessionA;
             } else {
-                automatonState = state.possessionB;
-                tacklesTeam2++;
+                if (rand.runif() <= probabilityFoul) {
+                    // Perhaps it was a foul?
+                    foulsTeam2++;
+                    automatonState = state.possessionA;
+                } else if (rand.runif() <= probabilityCorner) {
+                    // Maybe a corner?
+                    automatonState = state.cornerA;
+                    corners1++;
+                } else {
+                    // Player 2 wins the ball
+                    automatonState = state.possessionB;
+                    tacklesTeam2++;
+                }
             }
 
-            // Maybe a corner?
-            if (rand.runif() <= probabilityCorner) {
-                automatonState = state.cornerA;
-                corners1++;
-            }
-
-            System.out.println("DRIBBLING A");
+//            System.out.println("DRIBBLING A");
         } else {
             teamBIterations++;
             Player dribbler = team2.getDribbler();
@@ -471,12 +476,21 @@ public class GameAutomaton extends Thread
                 automatonState = state.possessionA;
                 tacklesTeam1++;
             }
-            if (rand.runif() <= probabilityCorner) {
-                automatonState = state.cornerB;
+            if (rand.runif() <= probabilityFoul) {
+                // Perhaps it was a foul? If so,was made by player 1
+                foulsTeam1++;
+                automatonState = state.possessionB;     // We give ball to opposing team
+            } else if (rand.runif() <= probabilityCorner) {
+                // Maybe a corner?
+                automatonState = state.cornerB;         // Corner for team2
                 corners2++;
+            } else {
+                // Player 1 wins the ball
+                automatonState = state.possessionA;
+                tacklesTeam1++;
             }
-            System.out.println("DRIBBLING A");
         }
+//        System.out.println("DRIBBLING A");
     }
 
 
@@ -489,7 +503,7 @@ public class GameAutomaton extends Thread
         if (bacon <= probabilityToPass) {
             // We make a pass
             automatonState = (automatonState == state.possessionA ) ? state.passA : state.passB;
-            System.out.println("Switched to: " + ((automatonState == state.possessionA ) ? state.passA : state.passB));
+//            System.out.println("Switched to: " + ((automatonState == state.possessionA ) ? state.passA : state.passB));
         } else if (bacon <= probabilityToPass + probabilityToDribble) {
             // We make a dribble
             automatonState = (automatonState == state.possessionA ) ? state.dribbleA : state.dribbleB;
@@ -497,7 +511,7 @@ public class GameAutomaton extends Thread
             // We make a shot
             automatonState = (automatonState == state.possessionA) ? state.shootA : state.shootB;
         }
-        System.out.println("handlePossessionState returning: " + automatonState);
+//        System.out.println("handlePossessionState returning: " + automatonState);
         return automatonState;
     }
 
