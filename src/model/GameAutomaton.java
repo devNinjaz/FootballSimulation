@@ -4,6 +4,10 @@ import controller.DuelsEvaluator;
 import controller.Main;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+
+import java.util.List;
 
 /**
  * Created by termninja on 14.1.16..
@@ -12,19 +16,37 @@ public class GameAutomaton extends Thread
 {
     private Team team1, team2;
     private RandomUtil rand;
+
+    // ***************************************************************************************************************
     // We keep a reference to the labels at the GUI so we can update them
     private Label lb_goals_team1,  lb_goals_team2,  lb_poss_team1,  lb_poss_team2,
                       lb_shots_off_target_team1,  lb_shots_off_target_team2,  lb_shots_on_target_team1,
                       lb_shots_on_target_team2,  lb_attempted_passes_team1,  lb_attempted_passes_team2,
                       lb_successful_passes_team1,  lb_successful_passes_team2,  lb_tackles_team1,
                       lb_tackles_team2,  lb_fouls_team1,  lb_fouls_team2,  lb_interceptions_team1,
-                      lb_interceptions_team2,  lb_minute;
+                      lb_interceptions_team2,  lb_minute, lb_corners_team1, lb_corners_team2;
+    private TextArea ta_commentary, ta_scorers;
+    // ***************************************************************************************************************
 
     // Values that automaton uses
     private int goalsTeam1, goalsTeam2, possTeam1, possTeam2, shotsOffTeam1, shotsOffTeam2, shotsOnTeam1,
         shotsOnTeam2, foulsTeam1, foulsTeam2, tacklesTeam1, tacklesTeam2, succPassesTeam1, succPassesTeam2,
         attPassesTeam1, attPassesTeam2, interceptTeam1, interceptTeam2, gameMinutes = 0;
     private int attemptedDribbles1, attemptedDribbles2, successfulDribbles1, successfulDribbles2, corners1, corners2;
+
+    private float probabilityCorner, probabilityInterception;
+    private int automatonIterations, teamAIterations, teamBIterations;
+
+    public void bindCommentaryBox(TextArea ta_commentary)
+    {
+        this.ta_commentary = ta_commentary;
+    }
+
+    public void bindListViewsScorers(TextArea ta_scorers)
+    {
+        this.ta_scorers = ta_scorers;
+    }
+
 
     // States automaton uses
     enum state {
@@ -43,6 +65,12 @@ public class GameAutomaton extends Thread
         automatonState = state.initialState;            // setting initial automaton state
         duelsEvaluator = new DuelsEvaluator();
         rand = new RandomUtil();
+
+        probabilityCorner = rand.getFromInterval(15, 26) * 1.0f / 100.0f;
+        probabilityInterception = rand.getFromInterval(15, 30) * 1.0f / 100.0f;
+        automatonIterations = 1;
+        teamAIterations = 1;
+        teamBIterations = 1;
     }
 
     private void refreshGui()
@@ -52,7 +80,7 @@ public class GameAutomaton extends Thread
         updateOnGui(lb_successful_passes_team1, succPassesTeam1);
         updateOnGui(lb_fouls_team1, foulsTeam1);
         updateOnGui(lb_interceptions_team1, interceptTeam1);
-        updateOnGui(lb_poss_team1, 0);
+        updateOnGui(lb_poss_team1, Math.round((teamAIterations * 1.0f / automatonIterations) * 100.0f));
         updateOnGui(lb_shots_on_target_team1, shotsOnTeam1);
         updateOnGui(lb_shots_off_target_team1, shotsOffTeam1);
         updateOnGui(lb_tackles_team1, tacklesTeam1);
@@ -61,11 +89,14 @@ public class GameAutomaton extends Thread
         updateOnGui(lb_successful_passes_team2, succPassesTeam2);
         updateOnGui(lb_fouls_team2, foulsTeam2);
         updateOnGui(lb_interceptions_team2, interceptTeam2);
-        updateOnGui(lb_poss_team2, 0);
+        updateOnGui(lb_poss_team2, 100 - Math.round((teamAIterations * 1.0f / automatonIterations) * 100.0f));
         updateOnGui(lb_shots_on_target_team2, shotsOnTeam2);
         updateOnGui(lb_shots_off_target_team2, shotsOffTeam2);
         updateOnGui(lb_tackles_team2, tacklesTeam2);
         updateOnGui(lb_minute, gameMinutes);
+        updateOnGui(lb_corners_team1, corners1);
+        updateOnGui(lb_corners_team2, corners2);
+        updateOnGui(ta_commentary, DuelsEvaluator.CommentaryMsg);
     }
 
     private void updateOnGui(Label someLabel, int value)
@@ -73,6 +104,13 @@ public class GameAutomaton extends Thread
         // Update of GUI labels is done on JavaFX main thread
         Platform.runLater(() -> {
             someLabel.setText(value + "");
+        });
+    }
+
+    private void updateOnGui(TextArea commentary, String msg)
+    {
+        Platform.runLater(() -> {
+            commentary.appendText(msg + "\n");
         });
     }
 
@@ -102,7 +140,6 @@ public class GameAutomaton extends Thread
     @Override
     public void run()
     {
-        float lol;
         while (gameMinutes < 90) {
             try {
                 Thread.sleep(Main.MillisecondsForOneMinute);
@@ -110,7 +147,7 @@ public class GameAutomaton extends Thread
                     lb_minute.setText(gameMinutes + "");
                 });
                 nextMinute();
-                simulate(rand.getFromInterval(8, 15));
+                simulate(rand.getFromInterval(2, 9));
             } catch (InterruptedException e) {
                 System.out.println("");
             }
@@ -121,6 +158,7 @@ public class GameAutomaton extends Thread
 
 
     // Moves automaton into next state n times
+
     private void simulate(int n)
     {
         if (gameMinutes == 90) {
@@ -133,14 +171,14 @@ public class GameAutomaton extends Thread
         }
 
         for (int i = 0; i < n; i++) {
-            refreshGui();
+            automatonIterations++;
+            System.out.println("i = " + i);
             switch (automatonState) {
 
                 // INITIAL
                 case initialState:
                     // At the start of game, teamA has the ball
                     automatonState = state.possessionA;
-                    showCommentary(automatonState, null, null, 0f);
                     System.out.println("initial state");
                     break;
 
@@ -205,11 +243,13 @@ public class GameAutomaton extends Thread
                     return;
             }
         }
+        refreshGui();
     }
 
     private void handleCornerAction(int teamNumber)
     {
         if (teamNumber == 1) {
+            teamAIterations++;
             Player setPieceTaker = team1.getSetPieceTaker();
             float res = duelsEvaluator.tryCorner(setPieceTaker);
             corners1++;
@@ -217,6 +257,7 @@ public class GameAutomaton extends Thread
                 // Team scored from corner
                 shotsOnTeam1++;
                 automatonState = state.goalA;           // STATE SWITCH
+                duelsEvaluator.setLastScorer(team1.getDefender());
             } else {
                 // if no goal, 50/50 for ball winning by both sides
                 res = rand.runif();
@@ -229,6 +270,7 @@ public class GameAutomaton extends Thread
             System.out.println("CORNER A");
 
         } else {
+            teamBIterations++;
             Player setPieceTaker = team2.getSetPieceTaker();
             float res = duelsEvaluator.tryCorner(setPieceTaker);
             corners2++;
@@ -236,6 +278,7 @@ public class GameAutomaton extends Thread
                 // Team scored from corner
                 shotsOnTeam2++;
                 automatonState = state.goalB;           // STATE SWITCH
+                duelsEvaluator.setLastScorer(team2.getDefender());
             } else {
                 // if no goal, 50/50 for ball winning by both sides
                 res = rand.runif();
@@ -252,22 +295,25 @@ public class GameAutomaton extends Thread
     private void handleShootingAction(int teamNumber)
     {
         if (teamNumber == 1) {
+            teamAIterations++;
             Player shooter = team1.getShooter();
             Player goalkeeper = team2.getGoalkeeper();
             float res = duelsEvaluator.tryShooting(shooter, goalkeeper);
             if (res == DuelsEvaluator.successfulEvent) {
                 // We have a goal!
                 System.out.println("GOAL for " + team1.getTeamName() + " scored by: " + shooter.getFullPlayerName());
+                duelsEvaluator.setLastScorer(shooter);
                 automatonState = state.goalA;
                 shotsOnTeam1++;
             } else {
+                teamBIterations++;
                 // Player failed to score
                 // odds for corner: 40%
                 // odds for losing possession: 40%
                 // odds for retaining possesion: 20%
                 shotsOffTeam1++;
                 res = rand.runif();
-                if (res <= 0.4) {
+                if (res <= 0.4f) {
                     automatonState = state.cornerA;
                 } else if (res <= 0.4f + 0.4f) {
                     automatonState = state.possessionB;
@@ -276,12 +322,14 @@ public class GameAutomaton extends Thread
                 }
             }
         } else {
+            teamBIterations++;
             Player shooter = team2.getShooter();
             Player goalkeeper = team1.getGoalkeeper();
             float res = duelsEvaluator.tryShooting(shooter, goalkeeper);
             if (res == DuelsEvaluator.successfulEvent) {
                 // We have a goal!
                 System.out.println("GOAL for " + team2.getTeamName() + " scored by: " + shooter.getFullPlayerName());
+                duelsEvaluator.setLastScorer(shooter);
                 automatonState = state.goalB;
                 shotsOnTeam2++;
             } else {
@@ -291,7 +339,7 @@ public class GameAutomaton extends Thread
                 // odds for retaining possesion: 20%
                 shotsOffTeam2++;
                 res = rand.runif();
-                if (res <= 0.4) {
+                if (res <= 0.4f) {
                     automatonState = state.cornerB;
                 } else if (res <= 0.4f + 0.4f) {
                     automatonState = state.possessionA;
@@ -302,22 +350,34 @@ public class GameAutomaton extends Thread
         }
     }
 
+    private void updateScorers(TextArea ta_scorers, Player lastKnownScorer)
+    {
+        Platform.runLater(() -> {
+            ta_scorers.appendText(gameMinutes + "'\t" + lastKnownScorer.getFullPlayerName() + "\n");
+        });
+    }
+
     private void handleGoalAction(int teamNumber)
     {
         if (teamNumber == 1) {
+            teamAIterations++;
             goalsTeam1++;
             automatonState = state.possessionB;
             System.out.println("GOAL A");
         } else {
+            teamBIterations++;
             goalsTeam2++;
             automatonState = state.possessionA;
             System.out.println("GOAL B");
         }
+        updateScorers(ta_scorers, duelsEvaluator.getLastKnownScorer());
     }
 
+    // TODO optimize this
     private void handlePassingAction(int teamNumber)
     {
         if (teamNumber == 1) {
+            teamAIterations++;
             Player passer = team1.getPasser();
             Player intercepter = team2.getInterceptor();
             float res = duelsEvaluator.tryPassing(passer, intercepter);
@@ -327,12 +387,22 @@ public class GameAutomaton extends Thread
                 succPassesTeam1++;
             } else {
                 // teamA lost possession
+               // TODO improve TRYPASSING with interception fix
+                // Let's see if it's real interception
+                if (rand.runif() <= probabilityInterception) {
+                    interceptTeam2++;
+                } else {
+                    // else, ball goes into no man's land, 50%50 split
+                    if (rand.runif() <= 0.5f) automatonState = state.possessionA;
+                    else automatonState = state.possessionB;
+                }
                 attPassesTeam1++;
-                interceptTeam2++;
-                automatonState = state.possessionB;
+
+//                automatonState = state.possessionB;
             }
             System.out.println("PASSING A");
         } else {
+            teamBIterations++;
             Player passer = team2.getPasser();
             Player intercepter = team1.getInterceptor();
             float res = duelsEvaluator.tryPassing(passer, intercepter);
@@ -342,9 +412,15 @@ public class GameAutomaton extends Thread
                 succPassesTeam2++;
             } else {
                 // teamA lost possession
+                if (rand.runif() <= probabilityInterception) {
+                    interceptTeam1++;
+                } else {
+                    // else, ball goes into no man's land, 50%50 split
+                    if (rand.runif() <= 0.5f) automatonState = state.possessionB;
+                    else automatonState = state.possessionA;
+                }
                 attPassesTeam2++;
-                interceptTeam1++;
-                automatonState = state.possessionA;
+//                automatonState = state.possessionA;
             }
             System.out.println("PASSING B");
         }
@@ -353,25 +429,32 @@ public class GameAutomaton extends Thread
     private void handleDribbleAction(int teamNumber)
     {
         if (teamNumber == 1) {
+            teamAIterations++;
             Player dribbler = team1.getDribbler();
             Player opposition;
             float res = rand.runif();
             if (res <= 0.5f) opposition = team2.getMidfielder();
             else opposition = team2.getDefender();
             res = duelsEvaluator.tryDribbling(dribbler, opposition);
+            attemptedDribbles1++;
             if (res == DuelsEvaluator.successfulEvent) {
                 // Successful dribble!
-                attemptedDribbles1++;
                 successfulDribbles1++;
-                showCommentary(automatonState, dribbler, opposition, res);
                 automatonState = state.possessionA;
             } else {
-                attemptedDribbles1++;
-                showCommentary(automatonState, dribbler, opposition, res);
                 automatonState = state.possessionB;
+                tacklesTeam2++;
             }
+
+            // Maybe a corner?
+            if (rand.runif() <= probabilityCorner) {
+                automatonState = state.cornerA;
+                corners1++;
+            }
+
             System.out.println("DRIBBLING A");
         } else {
+            teamBIterations++;
             Player dribbler = team2.getDribbler();
             Player opposition;
             float res = rand.runif();
@@ -382,12 +465,15 @@ public class GameAutomaton extends Thread
                 // Successful dribble!
                 attemptedDribbles2++;
                 successfulDribbles2++;
-                showCommentary(automatonState, dribbler, opposition, res);
                 automatonState = state.possessionB;
             } else {
                 attemptedDribbles2++;
-                showCommentary(automatonState, dribbler, opposition, res);
                 automatonState = state.possessionA;
+                tacklesTeam1++;
+            }
+            if (rand.runif() <= probabilityCorner) {
+                automatonState = state.cornerB;
+                corners2++;
             }
             System.out.println("DRIBBLING A");
         }
@@ -415,41 +501,6 @@ public class GameAutomaton extends Thread
         return automatonState;
     }
 
-    // TODO decide on the fate of this function
-    private void showCommentary(state automatonState, Player homie1, Player homie2, float res)
-    {
-        String msg = "";
-        switch (automatonState) {
-            case initialState:
-                msg = "Game has begun.";
-                break;
-            case halfTimeState:
-                msg = "Half time. Result is: " + team1.getTeamName() + " " + goalsTeam1
-                        + " : " + goalsTeam2 + " " + team2.getTeamName();
-                break;
-            case finalState:
-                msg = "End of game. Result is: " + team1.getTeamName() + " " + goalsTeam1
-                        + " : " + goalsTeam2 + " " + team2.getTeamName();
-                break;
-            case goalA:
-                msg = "GOAL for " + team1.getTeamName();
-                msg = "\nScored by: " + homie1.getFullPlayerName();
-                break;
-            case dribbleA:
-                msg = "DRIBBLE from " + homie1.getPlayerName() + " " + homie1.getPlayerSurname()
-                        + " against " + homie2.getFullPlayerName() + ": ";
-                if (res == DuelsEvaluator.successfulEvent)
-                    msg += "SUCCESS";
-                else
-                    msg += "FAILED";
-                break;
-        }
-
-        // TODO Bind to some textBox on gui
-        System.out.println(msg);
-    }
-
-
     public void nextMinute()
     {
         gameMinutes++;
@@ -460,7 +511,7 @@ public class GameAutomaton extends Thread
                      Label lb_shots_on_target_team2, Label lb_attempted_passes_team1, Label lb_attempted_passes_team2,
                      Label lb_successful_passes_team1, Label lb_successful_passes_team2, Label lb_tackles_team1,
                      Label lb_tackles_team2, Label lb_fouls_team1, Label lb_fouls_team2, Label lb_interceptions_team1,
-                     Label lb_interceptions_team2, Label lb_minute)
+                     Label lb_interceptions_team2, Label lb_minute, Label lb_corners_team1, Label lb_corners_team2)
     {
         Platform.runLater(() -> {
             this.lb_goals_team1 = lb_goals_team1;
@@ -483,6 +534,8 @@ public class GameAutomaton extends Thread
             this.lb_fouls_team2 = lb_fouls_team2;
             this.lb_interceptions_team2 = lb_interceptions_team2;
             this.lb_minute = lb_minute;
+            this.lb_corners_team1 = lb_corners_team1;
+            this.lb_corners_team2 = lb_corners_team2;
         });
     }
 
