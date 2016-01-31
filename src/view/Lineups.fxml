@@ -1,12 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LineupsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="600.0" style="-fx-background-color: #009933;" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LineupsController">
    <children>
-      <Label layoutX="181.0" layoutY="140.0" text="Radi!" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e8ebee" height="650.0" layoutX="2.0" layoutY="3.0" stroke="BLACK" strokeType="INSIDE" width="5.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e8ebee" height="650.0" layoutX="592.0" layoutY="3.0" stroke="BLACK" strokeType="INSIDE" width="5.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e8ebee" height="5.0" layoutX="149.0" layoutY="99.0" stroke="BLACK" strokeType="INSIDE" width="300.0" />
+      <Circle fill="#f1f5f8" layoutX="300.0" layoutY="322.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#009933" layoutX="300.0" layoutY="322.0" radius="95.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e8ebee" height="5.0" layoutX="7.0" layoutY="320.0" stroke="BLACK" strokeType="INSIDE" width="600.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e8ebee" height="108.0" layoutX="444.0" layoutY="-3.0" stroke="BLACK" strokeType="INSIDE" width="5.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e8ebee" height="108.0" layoutX="148.0" layoutY="-3.0" stroke="BLACK" strokeType="INSIDE" width="5.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e8ebee" height="5.0" layoutX="-5.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" width="600.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e8ebee" height="5.0" layoutX="-4.0" layoutY="648.0" stroke="BLACK" strokeType="INSIDE" width="600.0" />
+      <Circle fill="#1f93ff" layoutX="399.0" layoutY="483.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl3" alignment="CENTER" layoutX="174.0" layoutY="521.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Circle fill="#1f93ff" layoutX="224.0" layoutY="484.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl2" alignment="CENTER" layoutX="49.0" layoutY="491.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Circle fill="#1f93ff" layoutX="99.0" layoutY="454.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl11" alignment="CENTER" layoutX="253.0" layoutY="162.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Circle fill="#1f93ff" layoutX="301.0" layoutY="139.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl4" alignment="CENTER" layoutX="351.0" layoutY="516.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Label fx:id="pl5" alignment="CENTER" layoutX="456.0" layoutY="494.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Circle fill="#1f93ff" layoutX="504.0" layoutY="461.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#1f93ff" layoutX="99.0" layoutY="218.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl9" alignment="CENTER" layoutX="50.0" layoutY="241.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Label fx:id="pl8" alignment="CENTER" layoutX="302.0" layoutY="312.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Circle fill="#1f93ff" layoutX="298.0" layoutY="369.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl6" alignment="CENTER" layoutX="247.0" layoutY="390.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Circle fill="#1f93ff" layoutX="232.0" layoutY="291.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl7" alignment="CENTER" layoutX="188.0" layoutY="318.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Circle fill="#1f93ff" layoutX="352.0" layoutY="292.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#1f93ff" layoutX="504.0" layoutY="234.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl10" alignment="CENTER" layoutX="455.0" layoutY="254.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f7f8" height="98.0" layoutX="146.0" layoutY="7.0" stroke="BLACK" strokeType="INSIDE" width="307.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#009933" height="90.0" layoutX="151.0" layoutY="9.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: #009933;" width="297.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="50.0" layoutX="227.0" layoutY="8.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: #009933;" width="150.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#009933" height="45.0" layoutX="232.0" layoutY="7.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: #009933;" width="140.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f7f8" height="98.0" layoutX="152.0" layoutY="548.0" stroke="BLACK" strokeType="INSIDE" width="307.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#009933" height="90.0" layoutX="157.0" layoutY="553.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: #009933;" width="297.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="50.0" layoutX="231.0" layoutY="594.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: #009933;" width="150.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#009933" height="45.0" layoutX="236.0" layoutY="600.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: #009933;" width="140.0" />
+      <Circle fill="#f8fafc" layoutX="301.0" layoutY="323.0" radius="3.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#f8fafc" layoutX="302.0" layoutY="575.0" radius="3.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#f8fafc" layoutX="301.0" layoutY="77.0" radius="3.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl1" alignment="CENTER" layoutX="262.0" layoutY="564.0" prefHeight="31.0" prefWidth="99.0" text="Label" />
+      <Circle fill="#1f93ff" layoutX="310.0" layoutY="531.0" radius="23.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="pl12" alignment="CENTER" layoutX="262.0" layoutY="512.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl101" alignment="CENTER" layoutX="456.0" layoutY="218.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl71" alignment="CENTER" layoutX="181.0" layoutY="275.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl61" alignment="CENTER" layoutX="247.0" layoutY="353.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl81" alignment="CENTER" layoutX="302.0" layoutY="274.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl91" alignment="CENTER" layoutX="48.0" layoutY="202.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl51" alignment="CENTER" layoutX="456.0" layoutY="442.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl41" alignment="CENTER" layoutX="351.0" layoutY="464.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl111" alignment="CENTER" layoutX="252.0" layoutY="124.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl21" alignment="CENTER" layoutX="49.0" layoutY="439.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="pl31" alignment="CENTER" layoutX="174.0" layoutY="469.0" prefHeight="31.0" prefWidth="99.0" text="Label" textFill="#f2f2f2">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Button fx:id="bt_back" layoutX="18.0" layoutY="20.0" mnemonicParsing="false" onAction="#bt_back_to_choose_team" text="Back" />
    </children>
 </AnchorPane>

@@ -4,14 +4,19 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainScreenController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainScreenController">
    <center>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="14.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="main_bt_ChooseTeam" mnemonicParsing="false" onAction="#main_loadTeamChooserViewAction" text="Choose teams" />
-            <Button fx:id="main_bt_GitHub" mnemonicParsing="false" onAction="#main_visitGitHub" text="Visit us on github" />
-            <Button fx:id="main_bt_Exit" mnemonicParsing="false" onAction="#main_exit" text="Exit" />
+            <Button fx:id="main_bt_ChooseTeam" mnemonicParsing="false" onAction="#main_loadTeamChooserViewAction" prefWidth="200.0" text="Choose teams" />
+            <Button fx:id="main_bt_GitHub" mnemonicParsing="false" onAction="#main_visitGitHub" prefWidth="200.0" text="Visit us on github" />
+            <Button fx:id="main_bt_contact" mnemonicParsing="false" onAction="#main_contactUs" prefWidth="200.0" text="Contact us" />
+            <Button fx:id="main_bt_about" mnemonicParsing="false" onAction="#main_aboutEvent" prefWidth="200.0" text="About Project Aurora" />
+            <Button fx:id="main_bt_Exit" mnemonicParsing="false" onAction="#main_exit" prefWidth="200.0" text="Exit" />
          </children>
       </VBox>
    </center>
+   <top>
+      <TextField fx:id="tf_msgs" alignment="CENTER" editable="false" prefWidth="418.0" promptText="Welcome to Project Aurora" text="Welcome to Project Aurora" BorderPane.alignment="CENTER" />
+   </top>
 </BorderPane>
