@@ -192,7 +192,7 @@ public class GameAutomaton extends Thread
 
                 // POSSESSION (most important, controls most of the automaton)
                 case possessionA:
-                    automatonState = handlePossessionState(automatonState);           // swithces global variable automatonState
+                    automatonState = handlePossessionState(automatonState);           // switches global variable automatonState
                     break;
                 case possessionB:
                     automatonState = handlePossessionState(automatonState);
