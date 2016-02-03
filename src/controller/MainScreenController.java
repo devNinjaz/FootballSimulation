@@ -59,7 +59,7 @@ public class MainScreenController implements Initializable
     @FXML
     private void main_contactUs(ActionEvent event)
     {
-        tf_msgs.setText("nmicovic@outlook.com, lazar.rankovic@outlook.com");
+        tf_msgs.setText("nmicovic@outlook.com, lrankovic@outlook.com");
     }
 
     @FXML
