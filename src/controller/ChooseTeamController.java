@@ -113,7 +113,6 @@ public class ChooseTeamController implements Initializable
             System.out.println("Failed writing league logo at resources!");
         }
 
-
         // Reading teams and mapping them to objects
         ResultSet result = dbController.sendQuery("select * from teams t join league l on t.league_id = l.league_id");
 
