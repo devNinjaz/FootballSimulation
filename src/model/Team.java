@@ -156,7 +156,7 @@ public class Team
         RandomUtil rand = new RandomUtil();
         float val = rand.runif();
         if (val <= 0.60f) {
-            // 6666660% chances that best two shooters will take a shot
+            // 60% chances that best two shooters will take a shot
             val = rand.runif();
             if (val <= 0.55f)
                 return homies.get(0);
